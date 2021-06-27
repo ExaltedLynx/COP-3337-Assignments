@@ -1,7 +1,5 @@
 package main;
 
-import jdk.nashorn.internal.scripts.JO;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -15,8 +13,10 @@ public class FileSystem
 
         JTextArea fileText = new JTextArea();
         JLabel imageLabel = new JLabel();
+
         JScrollPane imgScrollPane = new JScrollPane(imageLabel);
         imgScrollPane.setPreferredSize(new Dimension(480, 480));
+
         JScrollPane scrollPane = new JScrollPane(fileText);
         scrollPane.setPreferredSize(new Dimension(480,480));
 
@@ -44,7 +44,6 @@ public class FileSystem
                 switch(i)
                 {
                     case 1:
-
                         if(fileName.contains(".png") | fileName.contains(".jpg"))
                         {
                             bFile.openImageFile(imageLabel, imgScrollPane);
@@ -71,7 +70,6 @@ public class FileSystem
                                 bFile.addTextToFile(userText, false);
                             }
                         }
-
                         break;
 
                     case 3:
@@ -92,16 +90,23 @@ public class FileSystem
                         {
                             fileText.append("\nNumber of lines: " + bFile.getLineNumTotal());
                         }
-                        JOptionPane.showMessageDialog(null, scrollPane, bFile.getFileName(), JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, scrollPane, "File Attributes", JOptionPane.INFORMATION_MESSAGE);
                         break;
 
                     case 5:
-
+                        bFile.search(fileText, scrollPane);
                         break;
 
                     case 6:
-                        bFile.tokenizeFileText(fileText);
-                        JOptionPane.showMessageDialog(null, scrollPane, bFile.getFileName(), JOptionPane.INFORMATION_MESSAGE);
+                        if(fileName.contains(".png") | fileName.contains(".jpg"))
+                        {
+                            display("This file does not contain text", "Error");
+                        }
+                        else
+                        {
+                            bFile.tokenizeFileText(fileText);
+                            JOptionPane.showMessageDialog(null, scrollPane, bFile.getFileName(), JOptionPane.INFORMATION_MESSAGE);
+                        }
                         break;
 
                     case 7:

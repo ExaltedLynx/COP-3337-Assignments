@@ -44,6 +44,4 @@ public class FileUtil
         }
         return lineNum;
     }
-
-
 }

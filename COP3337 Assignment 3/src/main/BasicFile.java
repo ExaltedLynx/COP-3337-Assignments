@@ -2,9 +2,9 @@ package main;
 
 import javax.swing.*;
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Scanner;
 
 public class BasicFile
 {
@@ -15,7 +15,6 @@ public class BasicFile
     {
         openFileChooser();
     }
-
 
     void copyBasicFile()
     {
@@ -156,10 +155,8 @@ public class BasicFile
     {
         String fParent = f.getParent();
         File parent = new File(fParent);
-        String[] filesInParent;
-        return filesInParent = parent.list();
+        return parent.list();
     }
-
 
     int getLineNumTotal()
     {
@@ -175,19 +172,31 @@ public class BasicFile
         return lineNum;
     }
 
-    String canRead()
+    public void search(JTextArea textArea, JScrollPane scrollPane)
     {
-        return (f.canRead())? "This file can be opened for reading": "Cannot read this file";
-    }
+        try
+        {
+            Scanner scanner = new Scanner(f);
+            String userInput;
+            userInput = JOptionPane.showInputDialog("Please enter the text you would like to search for.");
+            int lineNum = 0;
+            textArea.removeAll();
 
-    String directoryOrFile()
-    {
-        return (f.isDirectory())? "This is a directory and not an ordinary file": "This is a file and not a directory";
-    }
-
-    String exists()
-    {
-        return (f.exists())? "The physical file exists": "The physical file does not exist";
+            while (scanner.hasNextLine())
+            {
+                String line = scanner.nextLine();
+                lineNum++;
+                if (line.toLowerCase().contains(userInput.toLowerCase()))
+                {
+                    textArea.append(lineNum + ": " + line + "\n");
+                }
+            }
+            JOptionPane.showMessageDialog(null, scrollPane, f.getName(), JOptionPane.INFORMATION_MESSAGE);
+            scanner.close();
+        } catch (FileNotFoundException e )
+        {
+            display("Error while opening file", e.toString(), JOptionPane.WARNING_MESSAGE);
+        }
     }
 
     private void display(String msg, String s, int t)
