@@ -1,5 +1,7 @@
 package main;
 
+import jdk.nashorn.internal.scripts.JO;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -37,11 +39,12 @@ public class FileSystem
             String s = JOptionPane.showInputDialog(menu);
             try
             {
+                String fileName = bFile.getFileName();
                 int i = Integer.parseInt(s);
                 switch(i)
                 {
                     case 1:
-                        String fileName = bFile.getFileName();
+
                         if(fileName.contains(".png") | fileName.contains(".jpg"))
                         {
                             bFile.openImageFile(imageLabel, imgScrollPane);
@@ -51,16 +54,24 @@ public class FileSystem
                         break;
 
                     case 2:
-                        String userText = JOptionPane.showInputDialog("Write message to add to file");
-                        int writeType = Integer.parseInt(JOptionPane.showInputDialog(menu2));
-                        if(writeType == 1)
+                        if(fileName.contains(".png") | fileName.contains(".jpg"))
                         {
-                            bFile.addTextToFile(userText, true);
+                            display("Can't write to an image", "Error");
                         }
                         else
                         {
-                            bFile.addTextToFile(userText, false);
+                            String userText = JOptionPane.showInputDialog("Write message to add to file");
+                            int writeType = Integer.parseInt(JOptionPane.showInputDialog(menu2));
+                            if(writeType == 1)
+                            {
+                                bFile.addTextToFile(userText, true);
+                            }
+                            else
+                            {
+                                bFile.addTextToFile(userText, false);
+                            }
                         }
+
                         break;
 
                     case 3:
