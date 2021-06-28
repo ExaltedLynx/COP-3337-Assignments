@@ -77,7 +77,7 @@ public class FileSystem
                         break;
 
                     case 4:
-                        fileText.removeAll();
+                        fileText.setText(" ");
                         fileText.append("File Path: " + bFile.getPath());
                         fileText.append("\nFile in this directory: ");
                         for(String file : bFile.getFilesFromDirectory())
@@ -94,7 +94,12 @@ public class FileSystem
                         break;
 
                     case 5:
-                        bFile.search(fileText, scrollPane);
+                        if(fileName.contains(".png") | fileName.contains(".jpg"))
+                        {
+                            display("This file does not contain text", "Error");
+                        }
+                        else
+                            bFile.search(fileText, scrollPane);
                         break;
 
                     case 6:

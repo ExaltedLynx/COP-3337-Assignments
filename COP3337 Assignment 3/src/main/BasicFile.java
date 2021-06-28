@@ -1,6 +1,7 @@
 package main;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -35,6 +36,7 @@ public class BasicFile
 
     void openFileWithText(JTextArea textArea, JScrollPane scrollPane)
     {
+        textArea.setText(" ");
         try
         {
             FileUtil.setTextArea(f, textArea);
@@ -82,6 +84,7 @@ public class BasicFile
 
     void tokenizeFileText(JTextArea textArea)
     {
+        textArea.setText(" ");
         try
         {
             StreamTokenizer st = new StreamTokenizer(new FileReader(f));
@@ -92,23 +95,24 @@ public class BasicFile
             st.wordChars(',', ',');
             st.wordChars('\'', '\'');
             st.wordChars('!', '!');
-            st.whitespaceChars(' ', ' ');
             st.lowerCaseMode(true);
 
+            textArea.append("Tokenized File: ");
             while (st.nextToken() != StreamTokenizer.TT_EOF)
             {
                 switch (st.ttype)
                 {
                     case StreamTokenizer.TT_WORD:
-                        textArea.append(st.sval);
+
+                        textArea.append("\n" + st.sval + " ");
                         break;
 
                     case StreamTokenizer.TT_NUMBER:
-                        textArea.append(String.valueOf(st.nval));
+                        textArea.append("\n" + st.nval + " ");
                         break;
 
                     case StreamTokenizer.TT_EOL:
-                        textArea.append("\n");
+                        textArea.append("\n" + " <- New Line");
                         break;
                 }
             }
@@ -126,7 +130,7 @@ public class BasicFile
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter out = new PrintWriter(bw))
         {
-            out.println(userText);
+            out.print(userText);
 
         }
         catch (IOException e)
@@ -134,6 +138,34 @@ public class BasicFile
             display("it did something bad", e.toString(), JOptionPane.ERROR_MESSAGE);
         }
 
+    }
+
+    public void search(JTextArea textArea, JScrollPane scrollPane)
+    {
+        try
+        {
+            Scanner scanner = new Scanner(f);
+            String userInput;
+            userInput = JOptionPane.showInputDialog("Please enter the text you would like to search for.");
+            int lineNum = 0;
+            textArea.setText(" ");
+
+            while (scanner.hasNextLine())
+            {
+                String line = scanner.nextLine();
+                lineNum++;
+                if (line.toLowerCase().contains(userInput.toLowerCase()))
+                {
+                    textArea.append(lineNum + ": " + line + "\n");
+                }
+            }
+            JOptionPane.showMessageDialog(null, scrollPane, f.getName(), JOptionPane.INFORMATION_MESSAGE);
+            scanner.close();
+        }
+        catch (FileNotFoundException e )
+        {
+            display("Error while opening file", e.toString(), JOptionPane.WARNING_MESSAGE);
+        }
     }
 
     String getPath()
@@ -172,32 +204,6 @@ public class BasicFile
         return lineNum;
     }
 
-    public void search(JTextArea textArea, JScrollPane scrollPane)
-    {
-        try
-        {
-            Scanner scanner = new Scanner(f);
-            String userInput;
-            userInput = JOptionPane.showInputDialog("Please enter the text you would like to search for.");
-            int lineNum = 0;
-            textArea.removeAll();
-
-            while (scanner.hasNextLine())
-            {
-                String line = scanner.nextLine();
-                lineNum++;
-                if (line.toLowerCase().contains(userInput.toLowerCase()))
-                {
-                    textArea.append(lineNum + ": " + line + "\n");
-                }
-            }
-            JOptionPane.showMessageDialog(null, scrollPane, f.getName(), JOptionPane.INFORMATION_MESSAGE);
-            scanner.close();
-        } catch (FileNotFoundException e )
-        {
-            display("Error while opening file", e.toString(), JOptionPane.WARNING_MESSAGE);
-        }
-    }
 
     private void display(String msg, String s, int t)
     {
